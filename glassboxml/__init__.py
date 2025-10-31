@@ -1,2 +1,2 @@
 __version__ = '0.1.0'
-from .api.explain import explain
+from .api.linear_explain import explain

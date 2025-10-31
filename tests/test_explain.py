@@ -1,16 +1,19 @@
-import pickle
-import json
-from glassboxml.api.explain import explain
+from glassboxML.glassboxml.core.linear_model_parser import LinearRegression
+import numpy as np
 
-def test_linear_regression_explain():
-    with open("examples/sample_model.pkl", "rb") as f:
-        model = pickle.load(f)
-    
-    with open("examples/sample_input.json") as f:
-        input_data = json.load(f)
+def test_linear_regression():
+    X = np.array([[1, 2], [2, 3]])
+    y = np.array([3, 5])
+    model = LinearRegression()
+    model.fit(X, y)
+    preds = model.predict(X)
 
-    result = explain(model, input_data)
-    
-    assert "prediction" in result
-    assert "coefficients" in result
-    assert isinstance(result["coefficients"], dict)
+    # Check prediction shape
+    assert preds.shape == y.shape
+
+    # Check prediction accuracy (within tolerance)
+    np.testing.assert_allclose(preds, y, atol=1e-6)
+
+    # Optionally
+    w_expected = np.array([1.0, 1.0])  
+    np.testing.assert_allclose(model.weights, w_expected, atol=1e-6)
